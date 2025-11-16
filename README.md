@@ -57,8 +57,11 @@ The map will be zoomed in on the satellite imagery of a sample airport with vari
 
 Clickable Runway Polygons: Each runway will feature arrow-shaped clickable polygons visually representing the available departure directions. The player selects their choice by clicking on the appropriate arrow polygon based on the target's direction.
 
+
+
 ![Alternatif Metin](sketch_geogame.png)
 
+This sketch shows the game's interface very basicly. This image was made by AI, based on my idea and the sketch I drew (Due to my poor drawing skills, I am not including the original version of the sketch here). 
 
 
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/BhShQpq1)
