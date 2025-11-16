@@ -57,7 +57,7 @@ The map will be zoomed in on the satellite imagery of a sample airport with vari
 
 Clickable Runway Polygons: Each runway will feature arrow-shaped clickable polygons visually representing the available departure directions. The player selects their choice by clicking on the appropriate arrow polygon based on the target's direction.
 
-sketch_geogame.png
+(sketch_geogame.png)
 
 
 
