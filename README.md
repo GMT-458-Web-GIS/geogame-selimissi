@@ -57,4 +57,8 @@ The map will be zoomed in on the satellite imagery of a sample airport with vari
 
 Clickable Runway Polygons: Each runway will feature arrow-shaped clickable polygons visually representing the available departure directions. The player selects their choice by clicking on the appropriate arrow polygon based on the target's direction.
 
+https://github.com/GMT-458-Web-GIS/geogame-selimissi/blob/main/sketch_geogame.png
+
+
+
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/BhShQpq1)
