@@ -8,24 +8,88 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 
     <style>
-        /* TEMEL CSS SIFIRLAMA */
-        /* Haritanın tam ekran görünmesini sağlar */
+        /* --- GÜN 2: CSS STİLLERİ --- */
+        
+        /* Temel Sıfırlama */
         body, html {
             height: 100%;
             margin: 0;
             padding: 0;
-            overflow: hidden; /* Kaydırma çubuklarını gizle */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            background-color: #1a1a1a;
         }
 
-        /* HARİTA KONTEYNERİ */
+        /* Üst Bilgi Çubuğu (Header) - YENİLENDİ */
+        .game-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 10vh; /* Biraz daha yüksek */
+            background: rgba(26, 42, 76, 0.95); /* Koyu mavi */
+            color: white;
+            display: flex;
+            flex-direction: column; /* Alt alta diz */
+            justify-content: center;
+            align-items: center;
+            padding: 5px 25px;
+            box-sizing: border-box;
+            z-index: 1000;
+            border-bottom: 3px solid #ffc107;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        /* Header İçindeki Satırlar */
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            align-items: center;
+        }
+
+        /* Ana Bilgi (Ortadaki Büyük Yazı) */
+        .main-info {
+            font-size: 1.4rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px black;
+        }
+
+        /* Kalkış ve Hedef Renkleri */
+        .departure-text { color: #4da6ff; } /* Açık Mavi */
+        .target-text { color: #ffc107; }   /* Sarı */
+
+        /* Yan Bilgiler (Skor ve Süre) */
+        .side-info {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        /* Harita Konteyneri */
         #map {
-            height: 100%; /* Tüm yüksekliği kapla */
-            width: 100%; /* Tüm genişliği kapla */
-            background-color: #1a1a1a; /* Harita yüklenirken görünecek renk */
+            height: 100vh;
+            width: 100%;
+        }
+
+        /* Leaflet kontrol butonlarını header'ın altına it */
+        .leaflet-top {
+            top: 10vh; 
         }
     </style>
 </head>
 <body>
+
+    <div class="game-header">
+        <div class="main-info">
+            <span class="departure-text" id="departure-display">KALKIŞ: ...</span>
+            <span> ✈️ </span>
+            <span class="target-text" id="target-display">HEDEF: ...</span>
+        </div>
+        <div class="header-row" style="margin-top: 5px;">
+            <div class="side-info">SKOR: <span id="score">0</span></div>
+            <div class="side-info">SÜRE: <span id="time">90</span></div>
+        </div>
+    </div>
 
     <div id="map"></div>
 
@@ -33,24 +97,95 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
     <script>
-        // --- 1. GÜN: TEMEL HARİTA KURULUMU ---
+        // --- GÜN 2: JAVASCRIPT KODLARI ---
 
-        console.log("Oyun başlatılıyor...");
+        console.log("Gün 2 kodu başlatılıyor...");
 
-        // 1. Haritayı başlat
-        // 'map' id'li div'i bul.
-        // setView([Enlem, Boylam], Zoom Seviyesi)
-        // Koordinatlar İstanbul Havalimanı (LTFM) merkezidir.
-        const map = L.map('map').setView([41.265, 28.742], 13);
+        // --- 1. OYUN VERİSİ (HAVALİMANLARI ve HEDEFLER) ---
 
-        // 2. Uydu Görüntüsü Katmanını Ekle (Esri World Imagery)
-        // Bu, pilotaj teması için gerçekçi bir görünüm sağlar.
+        // Kalkış Yapılacak Havalimanları (Çok yönlü pistleri olanlar)
+        const airports = [
+            {
+                code: "EHAM",
+                name: "Amsterdam",
+                coords: [52.308, 4.768] // Havalimanı merkezi
+                // NOT: Pist verilerini (runways) yarına (3. Gün) bırakıyoruz.
+            },
+            {
+                code: "KORD",
+                name: "Chicago",
+                coords: [41.974, -87.907]
+            },
+            {
+                code: "OMDB",
+                name: "Dubai",
+                coords: [25.253, 55.365]
+            }
+            // Buraya daha fazla havalimanı eklenebilir.
+        ];
+
+        // Hedef Şehirler Havuzu
+        const targets = [
+            { name: "Tokyo", coords: [35.689, 139.691] },
+            { name: "New York", coords: [40.712, -74.006] },
+            { name: "İstanbul", coords: [41.008, 28.978] },
+            { name: "Cape Town", coords: [-33.924, 18.424] },
+            { name: "Sydney", coords: [-33.868, 151.209] }
+        ];
+
+
+        // --- 2. HARİTA KURULUMU ---
+        
+        // Haritayı başlat (Başlangıçta rastgele bir yere baksın)
+        const map = L.map('map', { zoomControl: false }).setView([0, 0], 2);
+
+        // Zoom kontrolünü sağ alta al
+        L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+        // Uydu Görüntüsü Katmanı (Esri)
         L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
-            maxZoom: 19 // Ne kadar yakınlaşabileceği
+            attribution: 'Tiles &copy; Esri',
+            maxZoom: 19
         }).addTo(map);
 
-        console.log("Harita başarıyla yüklendi. LTFM'ye odaklanıldı.");
+
+        // --- 3. OYUN MANTIĞI (YENİ SORU HAZIRLAMA) ---
+
+        // Rastgele bir tamsayı seçmek için yardımcı fonksiyon
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * max);
+        }
+
+        // Yeni bir soru (tur) başlatan fonksiyon
+        function startNewRound() {
+            console.log("Yeni tur başlatılıyor...");
+
+            // A) Rastgele Seçimler
+            // Havalimanı havuzundan rastgele birini seç
+            const departureAirport = airports[getRandomInt(airports.length)];
+            // Hedef havuzundan rastgele birini seç
+            const targetCity = targets[getRandomInt(targets.length)];
+
+            // (İleride eklenecek: Kalkış ve hedef aynıysa tekrar seçme mantığı)
+
+            // B) Arayüzü Güncelle
+            document.getElementById('departure-display').innerText = `KALKIŞ: ${departureAirport.name} (${departureAirport.code})`;
+            document.getElementById('target-display').innerText = `HEDEF: ${targetCity.name}`;
+
+            // C) Haritayı Yeni Havalimanına Uçur (FlyTo)
+            // setView yerine flyTo kullanarak animasyonlu geçiş yapıyoruz.
+            // Zoom seviyesini 13 yaparak havalimanına odaklanıyoruz.
+            map.flyTo(departureAirport.coords, 13, {
+                animate: true,
+                duration: 2 // Uçuş süresi (saniye)
+            });
+
+            console.log(`Yeni rota: ${departureAirport.name} -> ${targetCity.name}`);
+        }
+
+        // --- 4. OYUNU BAŞLAT ---
+        // Sayfa yüklendiğinde ilk turu otomatik başlat.
+        startNewRound();
 
     </script>
 
