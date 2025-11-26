@@ -4,9 +4,7 @@
 
 > **A global airport direction finding and geographic awareness game.**
 
-This project was developed within the scope of the **GMT-458 Web GIS** course's "Assignment 2: GeoGame." [cite_start]It is a time-based web application designed to test players' sense of geographic direction and knowledge of global city locations using an airport departure scenario[cite: 1, 2, 4].
-
-🔗 **Live Demo:** [Insert your GitHub Pages link here if available]
+This project was developed within the scope of the **GMT-458 Web GIS** course's "Assignment 2: GeoGame." It is a time-based web application designed to test players' sense of geographic direction and knowledge of global city locations using an airport departure scenario.
 
 ---
 
