@@ -1,3 +1,5 @@
+## Link to Game: https://gmt-458-web-gis.github.io/geogame-selimissi
+
 # ✈️ Ready for Departure - GMT-458 GeoGame
 
 > **A global airport direction finding and geographic awareness game.**
@@ -78,4 +80,4 @@ During the development process, significant differences arose between the initia
 
 ---
 
-*This project was developed by [Mustafa Selim ISSI] for the GMT-458 course.*
+*This project was developed by Mustafa Selim ISSI for the GMT-458 course.*
